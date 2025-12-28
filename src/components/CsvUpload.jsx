@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { API_BASE } from "../api";
+import { apiFetch } from "../api";
+
 
 export default function CsvUpload({ onUpload }) {
   const [file, setFile] = useState(null);
