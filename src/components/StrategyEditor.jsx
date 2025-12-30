@@ -1,3 +1,5 @@
+import { apiFetch } from "../api";
+
 const STRATEGIES = [
   "Breakout",
   "Support",
@@ -10,26 +12,30 @@ const STRATEGIES = [
 
 export default function StrategyEditor({ trade, onUpdate }) {
   async function saveStrategy(value) {
-    await fetch(`http://127.0.0.1:8000/trades/${trade.id}/strategy`, {
+    // update strategy
+    await apiFetch(`/trades/${trade.id}/strategy`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ final_strategy: value }),
     });
 
-    // refresh trades
-    const res = await fetch("http://127.0.0.1:8000/trades");
-    onUpdate(await res.json());
+    // refresh trades list
+    const updatedTrades = await apiFetch("/trades");
+    onUpdate(updatedTrades);
   }
 
   return (
     <select
-      className="ml-2 border rounded px-1"
+      className="ml-2 border rounded px-1 text-sm"
       value={trade.final_strategy || ""}
       onChange={e => saveStrategy(e.target.value)}
     >
       <option value="">Auto</option>
-      {STRATEGIES.map(s => (
-        <option key={s} value={s}>{s}</option>
+
+      {STRATEGIES.map(strategy => (
+        <option key={strategy} value={strategy}>
+          {strategy}
+        </option>
       ))}
     </select>
   );

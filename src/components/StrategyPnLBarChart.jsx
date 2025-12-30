@@ -14,7 +14,7 @@ export default function StrategyPnlBarChart({ refresh }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/analytics/strategy-pnl")
+    apiFetch("/analytics/strategy-pnl")
       .then(res => res.json())
       .then(res => setData(Array.isArray(res) ? res : []))
       .catch(() => setData([]));

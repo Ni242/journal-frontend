@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 
 export default function JournalInsights() {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/analytics/strategy")
-      .then(r => r.json())
+    apiFetch("/analytics/strategy")
       .then(data => {
-        if (!Array.isArray(data)) {
+        if (!Array.isArray(data) || !data.length) {
           setLoading(false);
           return;
         }
@@ -33,13 +33,16 @@ export default function JournalInsights() {
 
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setInsights(null);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
     return (
       <div className="bg-white p-4 rounded shadow">
-        Loading journal insights...
+        Loading journal insights…
       </div>
     );
   }
@@ -69,7 +72,7 @@ export default function JournalInsights() {
             {insights.worst_strategy.strategy}
           </div>
           <div className="text-red-600 font-semibold">
-            ₹ {insights.worst_strategy.total_pnl}
+            ₹ {Number(insights.worst_strategy.total_pnl).toFixed(2)}
           </div>
         </div>
 
@@ -82,7 +85,7 @@ export default function JournalInsights() {
             {insights.best_strategy.strategy}
           </div>
           <div className="text-green-600 font-semibold">
-            {insights.best_strategy.win_rate}%
+            {Number(insights.best_strategy.win_rate).toFixed(2)}%
           </div>
         </div>
 

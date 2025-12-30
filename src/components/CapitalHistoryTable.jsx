@@ -1,15 +1,29 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 
 export default function CapitalHistoryTable({ refresh }) {
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/pnl/")
-      .then(res => res.json())
+    apiFetch("/pnl")
       .then(data => {
         setRows(data.daily || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setRows([]);
+        setLoading(false);
       });
   }, [refresh]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded shadow p-4">
+        Loading capital history…
+      </div>
+    );
+  }
 
   if (!rows.length) return null;
 
@@ -23,7 +37,7 @@ export default function CapitalHistoryTable({ refresh }) {
         <thead>
           <tr className="bg-gray-100 text-left">
             <th className="p-2">Date</th>
-            <th className="p-2 text-right">Day P&L (₹)</th>
+            <th className="p-2 text-right">Day P&amp;L (₹)</th>
             <th className="p-2 text-right">Remaining Capital (₹)</th>
           </tr>
         </thead>
@@ -38,11 +52,11 @@ export default function CapitalHistoryTable({ refresh }) {
                   r.net_pnl >= 0 ? "text-green-600" : "text-red-600"
                 }`}
               >
-                ₹ {r.net_pnl.toFixed(2)}
+                ₹ {Number(r.net_pnl).toFixed(2)}
               </td>
 
               <td className="p-2 text-right font-semibold">
-                ₹ {r.equity.toFixed(2)}
+                ₹ {Number(r.equity).toFixed(2)}
               </td>
             </tr>
           ))}

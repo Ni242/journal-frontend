@@ -5,7 +5,7 @@ export default function StrategyAnalytics() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/analytics/strategy")
+    apiFetch("/analytics/strategy")
       .then(res => res.json())
       .then(res => {
         setData(Array.isArray(res) ? res : []);

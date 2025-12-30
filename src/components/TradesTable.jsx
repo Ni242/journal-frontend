@@ -23,7 +23,7 @@ export default function TradesTable({ refresh }) {
   const fetchTrades = () => {
     setLoading(true);
 
-    fetch("http://127.0.0.1:8000/trades")
+    apiFetch("/trades")
       .then(res => res.json())
       .then(data => {
         setTrades(Array.isArray(data) ? data : []);

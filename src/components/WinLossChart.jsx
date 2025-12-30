@@ -5,7 +5,7 @@ export default function WinLossChart() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/analytics/win-loss")
+    apiFetch("/analytics/win-loss")
       .then(r => r.json())
       .then(setData);
   }, []);

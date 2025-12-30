@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 
 export default function PnlSummary({ refresh }) {
   const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/pnl/")
-      .then(res => res.json())
+    apiFetch("/pnl/")
       .then(data => {
         setSummary(data.summary || null);
+        setLoading(false);
       })
-      .catch(() => setSummary(null));
+      .catch(() => {
+        setSummary(null);
+        setLoading(false);
+      });
   }, [refresh]);
 
-  if (!summary) {
+  if (loading || !summary) {
     return (
       <div className="bg-white p-4 rounded shadow">
-        Loading P&L summary…
+        Loading P&amp;L summary…
       </div>
     );
   }
@@ -34,7 +39,7 @@ export default function PnlSummary({ refresh }) {
       <Card label="Charges / Brokerage" value={summary.charges_total} />
       <Card label="Max Drawdown" value={summary.max_drawdown} />
 
-      {/* ===== CAPITAL (FIXED) ===== */}
+      {/* ===== CAPITAL ===== */}
       <Card
         label="Remaining Capital"
         value={summary.remaining_capital}

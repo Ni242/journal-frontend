@@ -5,7 +5,8 @@ export default function PnlTabs({ refresh }) {
   const [tab, setTab] = useState("daily");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/pnl")
+    apiFetch("/pnl")
+
       .then(res => res.json())
       .then(setData)
       .catch(console.error);

@@ -6,7 +6,7 @@ export default function StrategyWinRate() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/analytics/strategy")
+    apiFetch("/analytics/strategy")
       .then(res => {
         if (!res.ok) throw new Error("Failed to load strategy analytics");
         return res.json();

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const API_BASE = "http://127.0.0.1:8000";
+import { apiFetch } from "../api";
 
 export default function CapitalEditor({ onUpdate }) {
   const [capital, setCapital] = useState("");
@@ -12,13 +11,15 @@ export default function CapitalEditor({ onUpdate }) {
   // Load current capital
   // ---------------------------
   useEffect(() => {
-    fetch(`${API_BASE}/capital`)
-      .then(res => res.json())
+    apiFetch("/capital")
       .then(data => {
         setCapital(data.capital ?? "");
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setMsg("❌ Failed to load capital");
+        setLoading(false);
+      });
   }, []);
 
   // ---------------------------
@@ -34,15 +35,14 @@ export default function CapitalEditor({ onUpdate }) {
     setMsg("");
 
     try {
-      await fetch(`${API_BASE}/capital`, {
+      await apiFetch("/capital", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ capital: Number(capital) }),
       });
 
       setMsg("✅ Capital updated");
-      onUpdate?.(); // refresh PnL
-    } catch (e) {
+      onUpdate?.();
+    } catch {
       setMsg("❌ Failed to update capital");
     } finally {
       setSaving(false);
@@ -76,7 +76,9 @@ export default function CapitalEditor({ onUpdate }) {
           onClick={saveCapital}
           disabled={saving}
           className={`px-4 py-1 rounded text-white ${
-            saving ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+            saving
+              ? "bg-gray-400"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           {saving ? "Saving…" : "Save"}

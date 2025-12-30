@@ -1,21 +1,31 @@
-export default function NotesEditor({ trade, onUpdate }) {
-  async function saveNotes(val) {
-    await fetch(`http://127.0.0.1:8000/trades/${trade.id}/notes`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ notes: val }),
-    });
+import { apiFetch } from "../api";
 
-    const res = await fetch("http://127.0.0.1:8000/trades");
-    onUpdate(await res.json());
+export default function NotesEditor({ trade, onUpdate }) {
+
+  async function saveNotes(val) {
+    try {
+      // 🔹 Update notes
+      await apiFetch(`/trades/${trade.id}/notes`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: val }),
+      });
+
+      // 🔹 Refresh trades list
+      const updatedTrades = await apiFetch("/trades");
+      onUpdate(updatedTrades);
+
+    } catch (err) {
+      console.error("Failed to save notes", err);
+    }
   }
 
   return (
     <textarea
-      className="border rounded w-full text-xs"
+      className="border rounded w-full text-xs p-1"
       defaultValue={trade.notes || ""}
       onBlur={e => saveNotes(e.target.value)}
-      placeholder="Add notes..."
+      placeholder="Add notes…"
     />
   );
 }

@@ -15,7 +15,7 @@ export default function RiskUsageBarChart({ refresh }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/risk-usage")
+    apiFetch("/risk-usage")
       .then(res => res.json())
       .then(setData)
       .catch(() => setData([]));
