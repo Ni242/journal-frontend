@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../api";
 
+
 export default function CapitalEditor({ onUpdate }) {
   const [capital, setCapital] = useState("");
   const [loading, setLoading] = useState(true);
