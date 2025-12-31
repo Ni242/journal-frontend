@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
+
 import {
   BarChart,
   Bar,

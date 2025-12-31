@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { apiFetch } from "../api";
 
 export default function WinLossChart() {
   const [data, setData] = useState(null);

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
+
 
 export default function StrategyAnalytics() {
   const [data, setData] = useState([]);
